@@ -21,29 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       title: 'My Portfolio',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile', style: TextStyle(fontSize: 14)),
-          backgroundColor: Colors.white,
-          centerTitle: true,
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                children: [
-                  BuildProfileHeader(user: user),
-                  SizedBox(height: 16),
-                  BuildProfileInfo(user: user),
-                  SizedBox(height: 16),
-                  BuildProfileBio(user: user),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+      home: ProfileScreen(user: user),
     );
   }
 }
