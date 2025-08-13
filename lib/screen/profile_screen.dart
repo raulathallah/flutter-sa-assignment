@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_portofolio_app/models/user.dart';
+import 'package:my_portofolio_app/screen/profile_edit_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   final User user;
@@ -46,19 +47,56 @@ Widget buildProfileHeader(User user, BuildContext context) {
         ),
       ),
       SizedBox(height: 15),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            user.name,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                user.name,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
+              Row(
+                spacing: 6,
+                children: [
+                  Text(
+                    user.profession,
+                    style: TextStyle(fontSize: 14, color: Colors.teal),
+                  ),
+                  Container(height: 0.8, width: 12, color: Colors.teal),
+                  Text(
+                    user.address,
+                    style: TextStyle(fontSize: 14, color: Colors.teal),
+                  ),
+                ],
+              ),
+            ],
           ),
-          Text(
-            user.profession,
-            style: TextStyle(fontSize: 14, color: Colors.teal),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ProfileEditScreen(
+                    currentName: user.name,
+                    currentPosition: user.profession,
+                    currentLocation: user.address,
+                  ),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.teal,
+            ),
+            icon: Icon(Icons.edit),
+            label: Text('Edit'),
           ),
         ],
       ),
+
       SizedBox(height: 15),
     ],
   );

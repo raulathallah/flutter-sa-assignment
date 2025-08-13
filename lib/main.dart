@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:my_portofolio_app/components/appBar.dart';
 import 'package:my_portofolio_app/models/user.dart';
+import 'package:my_portofolio_app/providers/user_providers.dart';
 import 'package:my_portofolio_app/screen/contact_me_screen.dart';
 import 'package:my_portofolio_app/screen/my_portfolio_screen.dart';
 import 'package:my_portofolio_app/screen/profile_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (_) => UserProviders(), child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,30 +33,20 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-
-  User get user => User(
-    name: 'Raul Athallah',
-    profession: 'IT Developer',
-    email: 'raulathallah24@gmail.com',
-    phone: '+62 812-3xxx-7xxx',
-    address: 'Jl. Melati No. 10, Bandung, Jawa Barat',
-    bio:
-        "Hi, I'm Raul — a Mobile Developer passionate about creating smooth, user-focused mobile experiences. I enjoy turning ideas into polished apps and constantly strive to write clean, maintainable code that performs well across platforms.",
-  );
-
   void _changeTab(int index) {
     setState(() => _currentIndex = index);
   }
 
-  List<Widget> get _screens => [
-    ProfileScreen(user: user),
-    MyPortfolioScreen(),
-    ContactMeScreen(user: user),
-  ];
-  final List<String> _titles = ['Profile', 'My Portfolio', 'Contact Me'];
-
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<UserProviders>().user;
+    List<Widget> _screens = [
+      ProfileScreen(user: user),
+      MyPortfolioScreen(),
+      ContactMeScreen(user: user),
+    ];
+    final List<String> _titles = ['Profile', 'My Portfolio', 'Contact Me'];
+
     return Scaffold(
       appBar: buildAppBar(title: _titles[_currentIndex]),
       body: AnimatedSwitcher(

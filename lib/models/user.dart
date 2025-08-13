@@ -1,10 +1,10 @@
 class User {
-  final String name;
-  final String profession;
-  final String email;
-  final String phone;
-  final String address;
-  final String bio;
+  String name;
+  String profession;
+  String email;
+  String phone;
+  String address;
+  String bio;
 
   User({
     required this.name,
