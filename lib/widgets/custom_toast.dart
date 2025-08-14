@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 void customToast(String msg) {
   Fluttertoast.showToast(
-    msg: "Profile saved!",
+    msg: msg,
     toastLength: Toast.LENGTH_SHORT,
     gravity: ToastGravity.TOP,
     timeInSecForIosWeb: 1,
