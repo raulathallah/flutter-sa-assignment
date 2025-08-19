@@ -7,7 +7,7 @@ class MyPortfolioScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.08),
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
           child: buildListPortfolio(),
         ),
       ),

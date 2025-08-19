@@ -5,6 +5,7 @@ import 'package:my_portofolio_app/providers/user_providers.dart';
 import 'package:my_portofolio_app/screen/contact_me_screen.dart';
 import 'package:my_portofolio_app/screen/my_portfolio_screen.dart';
 import 'package:my_portofolio_app/screen/profile_screen.dart';
+import 'package:my_portofolio_app/widgets/floating_buttons.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -71,24 +72,11 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.phone), label: 'Contact'),
         ],
       ),
-      floatingActionButton: _currentIndex != 0
-          ? null
-          : ElevatedButton.icon(
-              icon: Icon(Icons.message_rounded), // Your icon here
-              label: Text('Contact Me'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  // 👈 Custom radius here
-                ),
-              ),
-              onPressed: () {
-                _changeTab(2);
-              },
-            ),
+      floatingActionButton: getFloatingButton(
+        _currentIndex,
+        _changeTab,
+        context,
+      ),
     );
   }
 }
