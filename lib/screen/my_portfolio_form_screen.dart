@@ -47,7 +47,7 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
           child: Form(
             key: formProvider.formKey,
             child: Column(
-              spacing: 12,
+              spacing: 60,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //PROJECT TITLE
@@ -161,74 +161,70 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                     ),
                   ],
                 ),
-
-                Row(
-                  spacing: 5,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red[50],
-                          foregroundColor: Colors.red,
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                        ),
-
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-
-                        child: Text("Cancel"),
-                      ),
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                          foregroundColor: Colors.white,
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                        ),
-
-                        onPressed: () {
-                          if (formProvider.validateForm()) {
-                            formProvider.saveForm();
-                            print(formProvider.formData.toString());
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.red[50],
-                                content: Text(
-                                  'Oops! Please fill out all required fields correctly.',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            );
-                          }
-                        },
-
-                        child: Text("Submit"),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(24),
+        child: Row(
+          spacing: 5,
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red[50],
+                  foregroundColor: Colors.red,
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                ),
+
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+
+                child: Text("Cancel"),
+              ),
+            ),
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  foregroundColor: Colors.white,
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                ),
+
+                onPressed: () {
+                  if (formProvider.validateForm()) {
+                    formProvider.saveForm();
+                    print(formProvider.formData.toString());
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.red[50],
+                        content: Text(
+                          'Oops! Please fill out all required fields correctly.',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    );
+                  }
+                },
+
+                child: Text("Submit"),
+              ),
+            ),
+          ],
         ),
       ),
     );
