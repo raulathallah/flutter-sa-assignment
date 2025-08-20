@@ -1,18 +1,24 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+
 class Portfolio {
   String projectTitle;
   String? category;
-  String completionDate;
+  DateTime? completionDate;
+  String? completionDateString;
   String description;
-  String projectImage;
+  String? projectImage;
   String projectLink;
 
   Portfolio({
-    required this.projectTitle,
-    required this.category,
-    required this.completionDate,
-    required this.description,
-    required this.projectImage,
-    required this.projectLink,
+    this.projectTitle = '',
+    this.category,
+    this.completionDate,
+    this.completionDateString = '',
+    this.description = '',
+    this.projectImage,
+    this.projectLink = '',
   });
 
   @override

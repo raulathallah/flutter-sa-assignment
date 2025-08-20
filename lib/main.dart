@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_portofolio_app/components/appBar.dart';
-import 'package:my_portofolio_app/models/user.dart';
+import 'package:my_portofolio_app/providers/form_portfolio_providers.dart';
 import 'package:my_portofolio_app/providers/user_providers.dart';
 import 'package:my_portofolio_app/screen/contact_me_screen.dart';
 import 'package:my_portofolio_app/screen/my_portfolio_screen.dart';
@@ -9,12 +9,24 @@ import 'package:my_portofolio_app/widgets/floating_buttons.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  // runApp(
+  //   ChangeNotifierProvider(create: (_) => UserProviders(), child: MyApp()),
+  // );
+
   runApp(
-    ChangeNotifierProvider(create: (_) => UserProviders(), child: MyApp()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProviders()),
+        ChangeNotifierProvider(create: (_) => FormPortfolioProviders()),
+      ],
+      child: MyApp(),
+    ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,6 +40,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   State<MainScreen> createState() => _MainScreenState();
 }

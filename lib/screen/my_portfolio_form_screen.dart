@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_portofolio_app/models/portfolio.dart';
 import 'package:intl/intl.dart';
+import 'package:my_portofolio_app/providers/form_portfolio_providers.dart';
+import 'package:provider/provider.dart';
 
 class MyPortfolioFormScreen extends StatefulWidget {
   @override
@@ -11,23 +13,6 @@ class MyPortfolioFormScreen extends StatefulWidget {
 }
 
 class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  Portfolio newPortfolio = Portfolio(
-    projectTitle: '',
-    category: null,
-    completionDate: '',
-    description: '',
-    projectImage: '',
-    projectLink: '',
-  );
-
-  String? selectedValue;
-
-  DateTime? selectedDate;
-
-  final TextEditingController _dateController = TextEditingController();
-
   File? _image;
   final picker = ImagePicker();
 
@@ -48,6 +33,8 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
   // String projectLink;
   @override
   Widget build(BuildContext context) {
+    final formProvider = Provider.of<FormPortfolioProviders>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Portfolio'),
@@ -58,16 +45,16 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey, // Attach the form key
+            key: formProvider.formKey,
             child: Column(
               spacing: 12,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //PROJECT TITLE
                 TextFormField(
+                  controller: formProvider.projectTitleController,
                   decoration: InputDecoration(labelText: 'Project Title'),
                   autofillHints: [AutofillHints.name],
-                  onChanged: (value) => {newPortfolio.projectTitle = value},
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your peroject title!';
@@ -79,26 +66,24 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
 
                 //CATEGORY
                 DropdownButtonFormField<String>(
-                  value: newPortfolio.category,
+                  value: formProvider.formData.category,
                   decoration: InputDecoration(labelText: 'Category'),
                   items: ['Web App', 'Mobile App']
                       .map(
                         (category) => DropdownMenuItem(
                           value: category,
-
                           child: Text(category),
                         ),
                       )
                       .toList(),
-
-                  onChanged: (value) => newPortfolio.category = value,
+                  onChanged: (value) => formProvider.setCategory(value),
                   validator: (value) =>
                       value == null ? 'Please select a category!' : null,
                 ),
 
                 //DATE
                 TextFormField(
-                  controller: _dateController,
+                  controller: formProvider.completionDateStringController,
                   decoration: InputDecoration(labelText: 'Completion Date'),
                   readOnly: true,
                   validator: (value) {
@@ -108,25 +93,14 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
 
                     return null;
                   },
-                  onTap: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                    );
-
-                    if (picked != null) {
-                      newPortfolio.completionDate = picked.toString();
-                      _dateController.text = DateFormat(
-                        'd MMMM y',
-                      ).format(picked); // yyyy-MM-dd
-                    }
+                  onTap: () {
+                    formProvider.pickDate(context);
                   },
                 ),
 
                 //DESCRIPTION
                 TextFormField(
+                  controller: formProvider.descriptionController,
                   decoration: InputDecoration(
                     labelText: 'Description',
                     alignLabelWithHint: true,
@@ -144,6 +118,7 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
 
                 //PROJECT LINK
                 TextFormField(
+                  controller: formProvider.projectLinkController,
                   decoration: InputDecoration(
                     labelText: 'Project Link',
                     alignLabelWithHint: true,
@@ -230,12 +205,9 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                         ),
 
                         onPressed: () {
-                          print(newPortfolio.toString());
-                          if (_formKey.currentState!.validate()) {
-                            // if valid =
-                            // ScaffoldMessenger.of(context).showSnackBar(
-                            //   SnackBar(content: Text('Form is valid')),
-                            // );
+                          if (formProvider.validateForm()) {
+                            formProvider.saveForm();
+                            print(formProvider.formData.toString());
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
