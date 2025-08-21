@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:my_portofolio_app/models/portfolio.dart';
 import 'package:intl/intl.dart';
 import 'package:my_portofolio_app/providers/form_portfolio_providers.dart';
+import 'package:my_portofolio_app/providers/portfolio_providers.dart';
 import 'package:provider/provider.dart';
 
 class MyPortfolioFormScreen extends StatefulWidget {
@@ -19,21 +20,21 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
   Future<void> pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
+      final formProviderTemp = Provider.of<FormPortfolioProviders>(
+        context,
+        listen: false,
+      );
       setState(() {
         _image = File(pickedFile.path);
       });
+      formProviderTemp.setProjectImage(pickedFile.path);
     }
   }
 
-  // String projectTitle;
-  // String category;
-  // String completionDate;
-  // String description;
-  // String projectImage;
-  // String projectLink;
   @override
   Widget build(BuildContext context) {
     final formProvider = Provider.of<FormPortfolioProviders>(context);
+    final portfolioProvider = Provider.of<PortfolioProviders>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +48,7 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
           child: Form(
             key: formProvider.formKey,
             child: Column(
-              spacing: 60,
+              spacing: 25,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //PROJECT TITLE
@@ -156,7 +157,9 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                           vertical: 6,
                         ),
                       ),
-                      onPressed: pickImage,
+                      onPressed: () {
+                        pickImage();
+                      },
                       label: Text("Pick Image"),
                     ),
                   ],
@@ -167,9 +170,9 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(24),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
         child: Row(
-          spacing: 5,
+          spacing: 12,
           children: [
             Expanded(
               child: ElevatedButton(
@@ -178,9 +181,8 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                   foregroundColor: Colors.red,
 
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 ),
 
@@ -198,7 +200,7 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                   foregroundColor: Colors.white,
 
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                   ),
 
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -207,7 +209,22 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                 onPressed: () {
                   if (formProvider.validateForm()) {
                     formProvider.saveForm();
-                    print(formProvider.formData.toString());
+
+                    portfolioProvider.addPortfolio(formProvider.formData);
+
+                    Navigator.pop(context);
+
+                    formProvider.resetForm();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.green[50],
+                        content: Text(
+                          'Portfolio saved!',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                      ),
+                    );
+                    //print(formProvider.formData.toString());
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

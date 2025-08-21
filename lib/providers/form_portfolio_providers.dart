@@ -82,6 +82,7 @@ class FormPortfolioProviders with ChangeNotifier {
     projectTitleController.clear();
     descriptionController.clear();
     projectLinkController.clear();
+    completionDateStringController.clear();
     notifyListeners();
   }
 }

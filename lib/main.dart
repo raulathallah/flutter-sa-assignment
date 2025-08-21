@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_portofolio_app/components/appBar.dart';
 import 'package:my_portofolio_app/providers/form_portfolio_providers.dart';
+import 'package:my_portofolio_app/providers/portfolio_providers.dart';
 import 'package:my_portofolio_app/providers/user_providers.dart';
 import 'package:my_portofolio_app/screen/contact_me_screen.dart';
 import 'package:my_portofolio_app/screen/my_portfolio_screen.dart';
@@ -18,6 +19,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProviders()),
         ChangeNotifierProvider(create: (_) => FormPortfolioProviders()),
+        ChangeNotifierProvider(create: (_) => PortfolioProviders()),
       ],
       child: MyApp(),
     ),
