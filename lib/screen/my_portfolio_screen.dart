@@ -9,20 +9,22 @@ import 'package:provider/provider.dart';
 class MyPortfolioScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final portfolios = context.watch<PortfolioProviders>().portfolios;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
-          child: buildListPortfolio(portfolios),
+          child: buildListPortfolio(context),
         ),
       ),
     );
   }
 }
 
-Widget buildListPortfolio(List<Portfolio> items) {
+Widget buildListPortfolio(BuildContext context) {
+  final portfolioProvider = context.watch<PortfolioProviders>();
+  final items = portfolioProvider.portfolios;
+
   return ListView.builder(
     itemCount: items.length,
     itemBuilder: (context, index) {
@@ -57,6 +59,28 @@ Widget buildListPortfolio(List<Portfolio> items) {
               ),
               SizedBox(height: 10),
               customTile("Project Link:", items[index].projectLink),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      portfolioProvider.deletePortfolio(index);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.green[50],
+                          content: Text(
+                            'Portfolio item deleted!',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(foregroundColor: Colors.red),
+                    child: Text('Delete'),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

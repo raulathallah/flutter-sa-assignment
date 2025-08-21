@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:my_portofolio_app/models/portfolio.dart';
 import 'package:intl/intl.dart';
 import 'package:my_portofolio_app/providers/form_portfolio_providers.dart';
@@ -35,6 +36,12 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
   Widget build(BuildContext context) {
     final formProvider = Provider.of<FormPortfolioProviders>(context);
     final portfolioProvider = Provider.of<PortfolioProviders>(context);
+    bool isUrlValid = true;
+    // final dateMaskFormatter = MaskTextInputFormatter(
+    //   mask: '##/####', // MM/YYYY
+    //   filter: {"#": RegExp(r'[0-9]')},
+    //   type: MaskAutoCompletionType.lazy,
+    // );
 
     return Scaffold(
       appBar: AppBar(
@@ -85,7 +92,9 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                 //DATE
                 TextFormField(
                   controller: formProvider.completionDateStringController,
-                  decoration: InputDecoration(labelText: 'Completion Date'),
+                  decoration: InputDecoration(
+                    labelText: 'Completion Date (MM/YYYY)',
+                  ),
                   readOnly: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -124,9 +133,18 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                     labelText: 'Project Link',
                     alignLabelWithHint: true,
                   ),
+                  autofillHints: [AutofillHints.url],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your project link!';
+                    }
+
+                    final urlPattern =
+                        r'^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-]*)*\/?$';
+                    final result = RegExp(urlPattern).hasMatch(value);
+
+                    if (!result) {
+                      return 'Please enter a valid URL!';
                     }
 
                     return null;
@@ -187,7 +205,27 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                 ),
 
                 onPressed: () {
-                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext ctx) {
+                      return AlertDialog(
+                        title: const Text("Are you sure you want to cancel?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Yes"),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(),
+                            child: const Text("No"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
 
                 child: Text("Cancel"),
@@ -219,7 +257,7 @@ class _MyPortfolioFormScreenState extends State<MyPortfolioFormScreen> {
                       SnackBar(
                         backgroundColor: Colors.green[50],
                         content: Text(
-                          'Portfolio saved!',
+                          'Portfolio item added successfully',
                           style: TextStyle(color: Colors.green),
                         ),
                       ),

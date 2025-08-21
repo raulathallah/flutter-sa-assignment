@@ -47,7 +47,7 @@ class FormPortfolioProviders with ChangeNotifier {
     if (picked != null) {
       setCompletionDate(picked);
       completionDateStringController.text = DateFormat(
-        'd MMMM y',
+        'MM/yyyy',
       ).format(picked);
     }
   }
